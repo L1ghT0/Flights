@@ -1,0 +1,15 @@
+.flights{
+    display: flex;
+    margin: 0 auto;
+    .result{
+        max-width: 800px;
+        width: 100%;
+    }
+    .flights_loadMore{
+        width: 100%;
+        max-width: 200px;
+        margin: auto;
+        display: flex;
+        padding: 5px 0;
+    }
+}
