@@ -94,28 +94,50 @@ export const Flights:React.FC<FlightsProps> = () => {
 
     return (
         <div className="flights">
-            <aside>
-                <div> {/* sort */}
-                    <input type="radio" name="sort" id="lowPrice" onChange={handleSort('lowPrice')}/>
-                    <label htmlFor="lowPrice"> - по возрастанию цены</label>
-                    <input type="radio" name="sort" id="highPrice" onChange={handleSort('highPrice')}/>
-                    <label htmlFor="highPrice"> - по убыванию цене</label>
+            <aside className="flights_settings">
+                <div className="flights_sorts"> {/* sort */}
+                    <h2 className="flights_aside_title">Сортировать</h2>
+                    <div className="flights_sortVariants">
+                        <div>
+                            <input type="radio" name="sort" id="lowPrice" onChange={handleSort('lowPrice')}/>
+                            <label htmlFor="lowPrice"> - по возрастанию цены</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="sort" id="highPrice" onChange={handleSort('highPrice')}/>
+                            <label htmlFor="highPrice"> - по убыванию цене</label>
+                        </div>
+                    </div>
                 </div>
-                <div> {/* filter */}
-                    <input type="checkbox" name="stops" id="stops-0" onChange={handleFilter('stops', '0')}/>
-                    <label htmlFor="stops-0"> - без пересадок</label>
-                    <input type="checkbox" name="stops" id="stops-1" onChange={handleFilter('stops', '1')}/>
-                    <label htmlFor="stops-1"> - 1 пересадка</label>
+                <div className="flights_filters"> {/* filter */}
+                    <h2 className="flights_aside_title">Фильтровать</h2>
+                    <div className="flights_filtersVariants">
+                        <div>
+                            <input type="checkbox" name="stops" id="stops-0" onChange={handleFilter('stops', '0')}/>
+                            <label htmlFor="stops-0"> - без пересадок</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="stops" id="stops-1" onChange={handleFilter('stops', '1')}/>
+                            <label htmlFor="stops-1"> - 1 пересадка</label>
+                        </div>
+                    </div>
                 </div>
-                <div> {/* price */}
-                    От<input type="text" name="minPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('minPrice', e.target.value)(e)}/>
-                    До<input type="text" name="maxPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('maxPrice', e.target.value)(e)}/>
+                <div className="flights_prices"> {/* price */}
+                    <h2 className="flights_aside_title">Цена</h2>
+                    <div className="flights_pricesVariants">
+                        <div className="flights_pricesVariant_from">
+                            От<input type="text" name="minPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('minPrice', e.target.value)(e)}/>
+                        </div>
+                        <div className="flights_pricesVariant_to">
+                            До<input type="text" name="maxPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('maxPrice', e.target.value)(e)}/>
+                        </div>
+                    </div>
                 </div>
-                <div> {/* airlines */}
-                    <ul>
+                <div className="flights_airlines"> {/* airlines */}
+                    <h2 className="flights_aside_title">Авиакомпании</h2>
+                    <ul className="flights_airlinesVariants">
                         {
                             listOfAirlines.map(airline => {
-                                return <li><input type="checkbox" name="carrier" onChange={handleFilter('carrier', airline.carrier.caption)}/>-<span>{airline.carrier.caption}</span> от {airline.price.amount.split('.')[0]} {airline.price.currency}</li>
+                                return <li className="flights_airlinesVariant"><input type="checkbox" name="carrier" onChange={handleFilter('carrier', airline.carrier.caption)}/>-<span className="flights_airlines_airlineName">{airline.carrier.caption}</span> <span className="flights_airlines_price">от {airline.price.amount.split('.')[0]} {airline.price.currency}</span></li>
                             })
                         }
                     </ul>

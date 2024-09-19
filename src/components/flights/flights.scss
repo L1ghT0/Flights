@@ -1,10 +1,65 @@
 .flights{
     display: flex;
     margin: 0 auto;
+
+    .flights_settings{
+        margin-top: 20px;
+        padding: 0 10px;
+
+        .flights_aside_title{
+            font-size: 20px;
+            font-weight: 700;
+        }
+    
+        .flights_sorts{
+            .flights_sortVariants{
+                margin: 20px 0;
+            }
+        }
+        .flights_filters{
+            .flights_filtersVariants{
+                margin: 20px 0;
+            }
+        }
+        .flights_prices{
+            display: flex;
+            flex-direction: column;
+            .flights_pricesVariants{
+                margin: 20px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        .flights_airlines{
+            .flights_airlinesVariants{
+                .flights_airlinesVariant{
+                    margin: 4px 0;
+                    align-items: center;
+                    display: flex;
+                }
+                margin-top: 14px;
+                .flights_airlines_airlineName{
+                    display: inline-block;
+                    max-width: 140px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                  
+                }
+                .flights_airlines_price{
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+    
+
     .result{
         max-width: 800px;
         width: 100%;
     }
+
     .flights_loadMore{
         width: 100%;
         max-width: 200px;
