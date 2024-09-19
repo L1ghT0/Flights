@@ -19,13 +19,13 @@ export const Flights:React.FC<FlightsProps> = () => {
     type sortTypes = {
         lowPrice:  () => Flight[],
         highPrice: () => Flight[],
-        duration:  () => []
+        duration:  () => Flight[]
     }
     
     const sortBy:sortTypes = {
         lowPrice:  () => flights.slice().sort((a,b) => Number(a.flight.price.total.amount) - Number(b.flight.price.total.amount)),
         highPrice: () => flights.slice().sort((a,b) => Number(b.flight.price.total.amount) - Number(a.flight.price.total.amount)),
-        duration:  () => [] // TODO: sort by duration
+        duration:  () => flights.slice().sort((a,b) => Number(a.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0)) - Number(b.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0)))
     } 
 
     const handleSort = (sortType: keyof sortTypes) => {
@@ -105,6 +105,10 @@ export const Flights:React.FC<FlightsProps> = () => {
                         <div>
                             <input type="radio" name="sort" id="highPrice" onChange={handleSort('highPrice')}/>
                             <label htmlFor="highPrice"> - по убыванию цене</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="sort" id="duration" onChange={handleSort('duration')}/>
+                            <label htmlFor="duration"> - по времени в пути</label>
                         </div>
                     </div>
                 </div>
