@@ -52,14 +52,18 @@ export const Flights:React.FC<FlightsProps> = () => {
 
     const handleFilter = (filterType: keyof filterTypes, value: string) => {
         return (e:ChangeEvent<HTMLInputElement>) => {
-            
+
             if(e.target.type === 'checkbox' && e.target.checked) {
                 setFiltersApplied([...filtersApplied, {type: filterType, value}])
             } else if (e.target.type === 'text' && e.target.value ) {
                 setFiltersApplied([...filtersApplied.filter(filter => filter.type !== filterType), {type: filterType, value}])
 
             } else {
-                setFiltersApplied([...filtersApplied].filter(filter => filter.type !== filterType))
+                if(filterType === 'carrier' || filterType === 'stops') {
+                    setFiltersApplied(filtersApplied.filter(filter => filter.value !== value))
+                } else{
+                    setFiltersApplied(filtersApplied.filter(filter => filter.type !== filterType))
+                }
             }
         }
     }
@@ -91,6 +95,13 @@ export const Flights:React.FC<FlightsProps> = () => {
         return airlines;
     }
     const listOfAirlines = getListOfAirlines();
+
+    const getIntersection = ( [ arr1, arr2, arr3, arr4 ]:Array<Flight[]> ) => {
+        arr1 = arr1.length ? arr1 : flights 
+        arr2 = arr2.length ? arr2 : flights
+        return arr1.filter(element => arr2.includes(element) && arr3.includes(element) && arr4.includes(element));
+    }
+
 
     return (
         <div className="flights">
@@ -149,17 +160,27 @@ export const Flights:React.FC<FlightsProps> = () => {
             </aside>
             <div className="result"> {/* result */}
                 <ul>
-                    {
-                        filtersApplied
-                            .reduce((acc, filter) => {
-                                return acc = filterBy[filter.type](filter.value, acc)
-                            }, flights)
+                    {   
+                        getIntersection(Object.values(filtersApplied
+                            .reduce((acc: { stops: Flight[], carrier: Flight[], minPrice:  Flight[], maxPrice: Flight[]}, filter) => {
+                                // TODO: redo the trash below and redo getIntersection function. This is a temporary solution and will be fixed ASAP. 
+                                if(filter.type === 'stops') { 
+                                    return { ...acc, stops: [...acc.stops,...filterBy[filter.type](filter.value, flights)] }
+                                } else if (filter.type === 'carrier') {
+                                    return { ...acc, carrier: [...acc.carrier, ...filterBy[filter.type](filter.value, flights)] }
+                                } else if (filter.type === 'minPrice') {
+                                    return { ...acc, minPrice: [...filterBy[filter.type](filter.value, flights)] }
+                                } else if (filter.type === 'maxPrice') {
+                                    return { ...acc, maxPrice: [...filterBy[filter.type](filter.value, flights)] }
+                                }
+                                return acc
+                            }, {stops: [], carrier: [], minPrice: flights, maxPrice: flights})))
                             .map(flight => {
                                 return <FlightCard key={flight.flightToken} flightData={flight.flight}/>
                             })
                             .filter((flight, index) => {
                                 return index < listSize
-                            })
+                            }) 
                     }
                 </ul>
                 <input type="button" className="flights_loadMore" value='показать еще' onClick={handleShowMore(4)}/>
