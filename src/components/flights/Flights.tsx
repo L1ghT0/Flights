@@ -46,7 +46,7 @@ export const Flights:React.FC<FlightsProps> = () => {
     const filterBy: filterTypes = {
         maxPrice: (price: string, arr: Flight[])      => arr.filter(flight => Number(flight.flight.price.total.amount) <= Number(price)),
         minPrice: (price: string, arr: Flight[])      => arr.filter(flight => Number(flight.flight.price.total.amount) >= Number(price)),
-        stops:    (numOfStops: string, arr: Flight[]) => arr.filter(flight => flight.flight.legs[0].segments.length - 1 === Number(numOfStops)),
+        stops:    (numOfStops: string, arr: Flight[]) => arr.filter(flight => flight.flight.legs.every(leg => leg.segments.length - 1 === Number(numOfStops))),
         carrier:  (carrier: string, arr: Flight[])    => arr.filter(flight => flight.flight.carrier.caption === carrier)
     }
 
