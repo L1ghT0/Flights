@@ -23,6 +23,7 @@ https://L1ghT0.github.io/Flights
 
 ### Screenshots:
 
+![Flights](./screenshots/Flights.png)
 
 #### Available scripts:
 ```
