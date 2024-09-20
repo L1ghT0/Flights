@@ -20,7 +20,7 @@ export const FlightCard:React.FC<FlightCardProps> = (props) => {
     return (
         <li className="FlightCard">
             <div className="FlightCard_top">
-                <span>{props.flightData.price.total.amount}</span>
+                <span className="FlightCard_top_totalPrice">{props.flightData.price.total.amount} {props.flightData.price.total.currency}</span>
                 <span>Стоимость для одного взрослого пассажира</span>
             </div>
             <div className="flightCard_flightinfo">
