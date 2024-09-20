@@ -126,24 +126,28 @@ export const Flights:React.FC<FlightsProps> = () => {
                 <div className="flights_filters"> {/* filter */}
                     <h2 className="flights_aside_title">Фильтровать</h2>
                     <div className="flights_filtersVariants">
-                        <div>
-                            <input type="checkbox" name="stops" id="stops-0" onChange={handleFilter('stops', '0')}/>
-                            <label htmlFor="stops-0"> - без пересадок</label>
-                        </div>
-                        <div>
-                            <input type="checkbox" name="stops" id="stops-1" onChange={handleFilter('stops', '1')}/>
-                            <label htmlFor="stops-1"> - 1 пересадка</label>
-                        </div>
+                        {
+                            [...new Set(flightsFromStore.reduce((acc:number[], flight) => {
+                                return acc = [...acc, ...flight.flight.legs.map( leg => leg.segments.length-1 )]
+                            }, [] ))].map(stop => { 
+                                return (
+                                    <div>
+                                        <input type="checkbox" name="stops" id={'stop-' + stop} onChange={handleFilter('stops', String(stop))}/>
+                                        <label htmlFor={'stop-' + stop}> - {!stop ? 'без пересадок' : stop + ' пересадка'}</label> {/* TODO: write a word parser to make the right ending of the word пересадка*/}
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
                 <div className="flights_prices"> {/* price */}
                     <h2 className="flights_aside_title">Цена</h2>
                     <div className="flights_pricesVariants">
                         <div className="flights_pricesVariant_from">
-                            От<input type="text" name="minPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('minPrice', e.target.value)(e)}/>
+                            От <input type="text" name="minPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('minPrice', e.target.value)(e)}/>
                         </div>
                         <div className="flights_pricesVariant_to">
-                            До<input type="text" name="maxPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('maxPrice', e.target.value)(e)}/>
+                            До <input type="text" name="maxPrice" onChange={(e:ChangeEvent<HTMLInputElement>) => handleFilter('maxPrice', e.target.value)(e)}/>
                         </div>
                     </div>
                 </div>
