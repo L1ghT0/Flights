@@ -136,9 +136,9 @@ export const Flights:React.FC<FlightsProps> = () => {
                         {
                             [...new Set(flightsFromStore.reduce((acc:number[], flight) => {
                                 return acc = [...acc, ...flight.flight.legs.map( leg => leg.segments.length-1 )]
-                            }, [] ))].map(stop => { 
+                            }, [] ))].map((stop, index) => { 
                                 return (
-                                    <div>
+                                    <div key={`stops`+ index}>
                                         <input type="checkbox" name="stops" id={'stop-' + stop} onChange={handleFilter('stops', String(stop))}/>
                                         <label htmlFor={'stop-' + stop}> - {!stop ? 'без пересадок' : stop + ' пересадка'}</label> {/* TODO: write a word parser to make the right ending of the word пересадка*/}
                                     </div>
@@ -162,8 +162,8 @@ export const Flights:React.FC<FlightsProps> = () => {
                     <h2 className="flights_aside_title">Авиакомпании</h2>
                     <ul className="flights_airlinesVariants">
                         {
-                            listOfAirlines.map(airline => {
-                                return <li className="flights_airlinesVariant"><input type="checkbox" name="carrier" onChange={handleFilter('carrier', airline.carrier.caption)}/>-<span className="flights_airlines_airlineName">{airline.carrier.caption}</span> <span className="flights_airlines_price">от {airline.price.amount.split('.')[0]} {airline.price.currency}</span></li>
+                            listOfAirlines.map((airline, index) => {
+                                return <li key={`bestArilines` + index} className="flights_airlinesVariant"><input type="checkbox" name="carrier" onChange={handleFilter('carrier', airline.carrier.caption)}/>-<span className="flights_airlines_airlineName">{airline.carrier.caption}</span> <span className="flights_airlines_price">от {airline.price.amount.split('.')[0]} {airline.price.currency}</span></li>
                             })
                         }
                     </ul>

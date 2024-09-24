@@ -24,7 +24,7 @@ export const FlightCard:React.FC<FlightCardProps> = (props) => {
                 <span>Стоимость для одного взрослого пассажира</span>
             </div>
             <div className="flightCard_flightinfo">
-                {props.flightData.legs.map(leg => {
+                {props.flightData.legs.map((leg,index) => {
                     const departure = leg.segments[0].departureCity.caption + ', '+ leg.segments[0].departureAirport.caption 
                     const arrival   = leg.segments[leg.segments.length-1].arrivalCity.caption + ', ' + leg.segments[leg.segments.length-1].arrivalAirport.caption 
                     
@@ -34,7 +34,7 @@ export const FlightCard:React.FC<FlightCardProps> = (props) => {
                     const stops         = leg.segments.length - 1;
 
                     return (
-                            <div className="flightCard_segmentinfo">
+                            <div className="flightCard_segmentinfo" key = {`flightCard_segmentinfo` + index + duration}>
                                 <div>
                                     {departure} <span className="colorDefaultBlue">({leg.segments[0].departureAirport.uid})</span> ------------{'>'} {arrival} <span className="colorDefaultBlue">({leg.segments[leg.segments.length-1].arrivalAirport.uid})</span> 
                                 </div>
