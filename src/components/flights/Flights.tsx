@@ -15,23 +15,23 @@ export const Flights:React.FC<FlightsProps> = () => {
     const [flights, setFlights]                = useState<Flight[]>(flightsFromStore)
     const [bestPrices, setBestPrices]          = useState<BestPrices>(bestPricesFromStore)
     const [filtersApplied, setFiltersApplied]  = useState<Array<{type: keyof filterTypes, value: string}>>([])
+    const [sort, setSort]                      = useState<{type: keyof sortTypes}>()
 
     type sortTypes = {
-        lowPrice:  () => Flight[],
-        highPrice: () => Flight[],
-        duration:  () => Flight[]
+        lowPrice:  (a:Flight, b:Flight) => number,
+        highPrice: (a:Flight, b:Flight) => number,
+        duration:  (a:Flight, b:Flight) => number
     }
-    
+
     const sortBy:sortTypes = {
-        lowPrice:  () => flights.slice().sort((a,b) => Number(a.flight.price.total.amount) - Number(b.flight.price.total.amount)),
-        highPrice: () => flights.slice().sort((a,b) => Number(b.flight.price.total.amount) - Number(a.flight.price.total.amount)),
-        duration:  () => flights.slice().sort((a,b) => Number(a.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0)) - Number(b.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0)))
+        lowPrice:  (a,b) => Number(a.flight.price.total.amount) - Number(b.flight.price.total.amount),
+        highPrice: (a,b) => Number(b.flight.price.total.amount) - Number(a.flight.price.total.amount),
+        duration:  (a,b) => Number(a.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0)) - Number(b.flight.legs.reduce((acc, leg) => acc -= -leg.duration ,0))
     } 
 
     const handleSort = (sortType: keyof sortTypes) => {
         return (e:ChangeEvent) => {
-            let sortedArray = sortBy[sortType]()
-            if(sortedArray.length) setFlights(sortedArray);
+            setSort({type: sortType})
         }
     }
 
@@ -77,6 +77,8 @@ export const Flights:React.FC<FlightsProps> = () => {
                         return acc;
                     }, [])
                     .reduce((acc, filters) => acc = handleApplyFilters(filters, acc), flights)
+            
+    if(sort) listOfFlights = [...listOfFlights].sort(sortBy[sort.type])
 
     
     const [listSize, setListSize] = useState<number>(4)
