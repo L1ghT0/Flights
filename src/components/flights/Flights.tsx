@@ -173,12 +173,12 @@ export const Flights:React.FC<FlightsProps> = () => {
                 <ul>
                     {   
                         listOfFlights
-                        .map(flight => {
-                            return <FlightCard key={flight.flightToken} flightData={flight.flight}/>
-                        })
                         .filter((flight, index) => {
                             return index < listSize
                         }) 
+                        .map(flight => {
+                            return <FlightCard key={flight.flightToken} flightData={flight.flight}/>
+                        })
                     }
                 </ul>
                 <input type="button" className="flights_loadMore" value='показать еще' onClick={handleShowMore(4)}/>
