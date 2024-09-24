@@ -52,7 +52,7 @@ export const Flights:React.FC<FlightsProps> = () => {
 
     const handleFilter = (filterType: keyof filterTypes, value: string) => {
         return (e:ChangeEvent<HTMLInputElement>) => {
-
+            // TODO: redo this event
             if(e.target.type === 'checkbox' && e.target.checked) {
                 setFiltersApplied([...filtersApplied, {type: filterType, value}])
             } else if (e.target.type === 'text' && e.target.value ) {
@@ -67,6 +67,17 @@ export const Flights:React.FC<FlightsProps> = () => {
             }
         }
     }
+    const handleApplyFilters = (filters: Array<{type: keyof filterTypes, value: string}>, arr: Flight[]) => {
+        return filters.reduce((acc: Flight[], filter) => acc = [...acc, ...filterBy[filter.type](filter.value, arr)],[])
+    } 
+    let listOfFlights = filtersApplied
+                    .reduce((acc: Array<Array<{type: keyof filterTypes, value: string}>>, filter)=> {
+                        const index = acc.map(subArr => subArr[0]?.type).indexOf(filter.type);
+                        ~index ? acc[index].push(filter) : acc.push([filter]);
+                        return acc;
+                    }, [])
+                    .reduce((acc, filters) => acc = handleApplyFilters(filters, acc), flights)
+
     
     const [listSize, setListSize] = useState<number>(4)
     const handleShowMore = (size: number) => {
@@ -95,12 +106,6 @@ export const Flights:React.FC<FlightsProps> = () => {
         return airlines;
     }
     const listOfAirlines = getListOfAirlines();
-
-    const getIntersection = ( [ arr1, arr2, arr3, arr4 ]:Array<Flight[]> ) => {
-        arr1 = arr1.length ? arr1 : flights 
-        arr2 = arr2.length ? arr2 : flights
-        return arr1.filter(element => arr2.includes(element) && arr3.includes(element) && arr4.includes(element));
-    }
 
 
     return (
@@ -165,26 +170,13 @@ export const Flights:React.FC<FlightsProps> = () => {
             <div className="result"> {/* result */}
                 <ul>
                     {   
-                        getIntersection(Object.values(filtersApplied
-                            .reduce((acc: { stops: Flight[], carrier: Flight[], minPrice:  Flight[], maxPrice: Flight[]}, filter) => {
-                                // TODO: redo the trash below and redo getIntersection function. This is a temporary solution and will be fixed ASAP. 
-                                if(filter.type === 'stops') { 
-                                    return { ...acc, stops: [...acc.stops,...filterBy[filter.type](filter.value, flights)] }
-                                } else if (filter.type === 'carrier') {
-                                    return { ...acc, carrier: [...acc.carrier, ...filterBy[filter.type](filter.value, flights)] }
-                                } else if (filter.type === 'minPrice') {
-                                    return { ...acc, minPrice: [...filterBy[filter.type](filter.value, flights)] }
-                                } else if (filter.type === 'maxPrice') {
-                                    return { ...acc, maxPrice: [...filterBy[filter.type](filter.value, flights)] }
-                                }
-                                return acc
-                            }, {stops: [], carrier: [], minPrice: flights, maxPrice: flights})))
-                            .map(flight => {
-                                return <FlightCard key={flight.flightToken} flightData={flight.flight}/>
-                            })
-                            .filter((flight, index) => {
-                                return index < listSize
-                            }) 
+                        listOfFlights
+                        .map(flight => {
+                            return <FlightCard key={flight.flightToken} flightData={flight.flight}/>
+                        })
+                        .filter((flight, index) => {
+                            return index < listSize
+                        }) 
                     }
                 </ul>
                 <input type="button" className="flights_loadMore" value='показать еще' onClick={handleShowMore(4)}/>
